@@ -6,14 +6,14 @@ import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class ExcelService {
 
-    public List<Integer> readExcelNumbers(String filePath) throws IOException {
-        List<Integer> numbers = new ArrayList<>();
+    public Set<Integer> readExcelNumbers(String filePath) throws IOException {
+        Set<Integer> numbers = new HashSet<>();
 
         try (FileInputStream fis = new FileInputStream(filePath);
              Workbook workbook = new XSSFWorkbook(fis)) {

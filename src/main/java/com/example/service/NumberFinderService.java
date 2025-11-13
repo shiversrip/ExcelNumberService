@@ -2,12 +2,12 @@ package com.example.service;
 
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Set;
 
 @Service
 public class NumberFinderService {
 
-    public int findMinimumN(List<Integer> numbers, int n) {
+    public int findMinimumN(Set<Integer> numbers, int n) {
         if (numbers == null || numbers.isEmpty() || n <= 0 || n > numbers.size()) {
             throw new IllegalArgumentException("Invalid input");
         }
@@ -22,27 +22,39 @@ public class NumberFinderService {
             return arr[left];
         }
 
-        int pivot = partition(arr, left, right);
+        int pivotIndex = medianOfThree(arr, left, right);
+        pivotIndex = partition(arr, left, right, pivotIndex);
 
-        if (k == pivot) {
+        if (k == pivotIndex) {
             return arr[k];
-        }
-
-        else if (k < pivot) {
-            return quickSelect(arr, left, pivot - 1, k);
-        }
-
-        else {
-            return quickSelect(arr, pivot + 1, right, k);
+        } else if (k < pivotIndex) {
+            return quickSelect(arr, left, pivotIndex - 1, k);
+        } else {
+            return quickSelect(arr, pivotIndex + 1, right, k);
         }
     }
 
-    private int partition(int[] arr, int left, int right) {
+    private int medianOfThree(int[] arr, int left, int right) {
+        int mid = left + (right - left) / 2;
 
-        int pivotValue = arr[right];
+        if (arr[left] > arr[mid]) {
+            swap(arr, left, mid);
+        }
+        if (arr[left] > arr[right]) {
+            swap(arr, left, right);
+        }
+        if (arr[mid] > arr[right]) {
+            swap(arr, mid, right);
+        }
+
+        return mid;
+    }
+
+    private int partition(int[] arr, int left, int right, int pivotIndex) {
+        int pivotValue = arr[pivotIndex];
+        swap(arr, pivotIndex, right);
 
         int storeIndex = left;
-
         for (int i = left; i < right; i++) {
             if (arr[i] < pivotValue) {
                 swap(arr, storeIndex, i);
@@ -51,7 +63,6 @@ public class NumberFinderService {
         }
 
         swap(arr, storeIndex, right);
-
         return storeIndex;
     }
 
